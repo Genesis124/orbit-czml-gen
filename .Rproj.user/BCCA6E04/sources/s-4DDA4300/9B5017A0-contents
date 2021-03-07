@@ -1,0 +1,41 @@
+from czml import czml
+import os
+import ipdb
+from python.circle import eph_circle
+
+# source tutorial-env/bin/activate
+# from IPython import embed
+# embed()
+
+# Initialize a document
+print("Initializing Document")
+doc = czml.CZML()
+
+print("Setting Document Values")
+base= czml.CZMLPacket(id='document')
+base.version='1.0'
+clk = czml.Clock()
+clk.interval    = '20170711T16Z/20170711T1620Z'
+clk.currentTime = '20170711T16Z'
+clk.multiplier  = 2
+clk.range = 'LOOP_STOP'
+clk.step = 'SYSTEM_CLOCK_MULTIPLIER'
+base.clock = clk
+doc.packets.append(base)
+
+# create a satellite packet
+print("Creating Ephemeris")
+sat = czml.CZMLPacket(id='Satellite')
+
+pos = czml.Position(referenceFrame='INERTIAL')
+pos.epoch = "2012-05-02T12:00:00Z"
+pos.cartesian = eph_circle(86400*100, 16000000)
+sat.position = pos
+doc.packets.append(sat)
+#ipdb.set_trace()
+
+# Write the CZML document to a file
+filepath = "output"
+filename = "ephemeris.czml"
+#ipdb.set_trace()
+doc.write(filepath + "/" + filename)

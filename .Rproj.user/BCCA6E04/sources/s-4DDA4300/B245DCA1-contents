@@ -1,0 +1,29 @@
+import math
+import numpy as np
+
+# Gravitational Constant
+G = 6.674 * 10**-11 # m**3/kg/s/s
+# Mass of the Earth
+m_E = 3.986004418 * 10**14
+# universal gravitational parameter
+u_E = m_E * G # m**3/s/s
+
+# delT: time delta between each position in seconds
+# r: radius
+def eph_circle(delT, r):
+  T = 2*math.pi*math.sqrt(r**3/u_E)
+  t = np.linspace(0, T, num = round(T/delT))
+  eph = []
+  print("Generating " + str(len(t)) + " steps in ephemeris")
+  for i in t:
+    theta = 2*math.pi*i/T
+    x = r * math.cos(theta)
+    y = r * math.sin(theta)
+    z = 0
+    pos = [x, y, z]
+    eph = eph + [i] + pos
+  return(eph)
+    
+if(True):
+  eph = eph_circle(86400, 16000000)
+  print(eph)
